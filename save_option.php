@@ -5,7 +5,7 @@
 
 class ch_option{
 	/*
-	* Save all post data to database
+	** Save all post data to database
 	*/
 	public function data_save($post){
 		unset($post['submit']);
@@ -18,7 +18,7 @@ class ch_option{
 	}
 
 	/*
-	* get single data from anyware using item title slug
+	** get single data from anyware using item title slug
 	*/
 	public function ch_get_opt($ch_option){
 		$ch_get_option = get_option('ch_theme_option' ); 
@@ -26,7 +26,7 @@ class ch_option{
 	}
 
 	/*
-	* Replace string, space & get lowarecase 
+	** Replace string, space & get lowarecase 
 	*/
 	public function ch_stringReplace($replace){
 		$replace = str_replace(' ', '_', strtolower($replace));

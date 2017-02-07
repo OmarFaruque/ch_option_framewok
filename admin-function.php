@@ -5,6 +5,7 @@
 ob_start();
 require_once('save_option.php');
 require_once('css/dynamic.php');
+$path = (is_child_theme())?get_stylesheet_directory_uri():get_template_directory_uri();
 
 /*
 * data get function 
@@ -31,6 +32,7 @@ function addThemeMenuItem() {
 * Add Script Logo Uplode
 */
 function wpGearManagerAdminScripts() {
+	global $path;
 	// function for upload script
 	wp_enqueue_script('media-upload');
 	wp_enqueue_script('thickbox');
@@ -38,7 +40,7 @@ function wpGearManagerAdminScripts() {
 	// wp_enqueue_script( 'my-script-handle', plugins_url('my-script.js', __FILE__ ), array( 'wp-color-picker' ), false, true );
 	if (isset($_GET['page'])) {
 		if ($_GET['page'] == 'theme-panel' || $_GET['page'] == 'theme-panel-settings') {
-			wp_enqueue_script('codeHouseThemeOptionsjs', get_template_directory_uri() . '/ch_admin_option/js/code_house_adminPanel.js', array('wp-color-picker'), false, true);
+			wp_enqueue_script('codeHouseThemeOptionsjs', $path . '/ch_option/js/code_house_adminPanel.js', array('wp-color-picker'), false, true);
 			wp_enqueue_media();
 		}
 	}
@@ -51,9 +53,10 @@ function wpGearManagerAdminScripts() {
 * Add custom Style for admin 
 */
 function wpGearManagerAdminStyles() {
+	global $path;
 	//  function for upload style
 	wp_enqueue_style('thickbox');
-	wp_enqueue_style('customThemeStyle', get_template_directory_uri() . '/ch_admin_option/css/admin-function.css');
+	wp_enqueue_style('parent-customThemeStyle', $path . '/ch_option/css/admin-function.css');
 	wp_enqueue_style('wp-color-picker');
 }
 add_action('admin_print_scripts', 'wpGearManagerAdminScripts');
@@ -77,10 +80,11 @@ function themeSettingsPage() {
 <div class="wrap">
 	<form method="post" action="">
 		<?php
+		global $path;
 		settings_fields("section");
 		do_settings_sections("theme-options");
 		$itemArray = array(
-		'general' => array(
+		/*'general' => array(
 			'branding' => array(
 				array(
 					'title' => 'logo',
@@ -98,42 +102,23 @@ function themeSettingsPage() {
 					'type' => 'upload'
 				),
 				array(
-					'title'	=> 	'Top Tabs (item 1)',
+					'title'	=> 	'Footer Items (item 1)',
 					'note'	=>	'Add tabs item for top heading',
 					'type'	=> 	'list',
-					'item'	=>	array('title', 'url', 'image', 'description')
+					'item'	=>	array('title', 'url', 'image')
 				),
 				array(
-					'title'	=> 	'Top Tabs (item 2)',
+					'title'	=> 	'Footer Items (item 2)',
 					'note'	=>	'Add tabs item for top heading',
 					'type'	=> 	'list',
-					'item'	=>	array('title', 'url', 'image', 'description')
+					'item'	=>	array('title', 'url', 'image')
 				),
 				array(
-					'title'	=> 	'Top Tabs (item 3)',
+					'title'	=> 	'Footer Items (item 3)',
 					'note'	=>	'Add tabs item for top heading',
 					'type'	=> 	'list',
-					'item'	=>	array('title', 'url', 'image', 'description')
-				),
-				array(
-					'title'	=> 'Hot Line',
-					'note'	=> 	'Hot line for customer contact',
-					'type'	=>	'text'
-				),
-				array(
-					'title'	=> 	'Top Banner',
-					'note'	=>	'Free Shipping Banner',
-					'type'	=>	"list",
-					'item'	=> 	array('url', 'image')
+					'item'	=>	array('title', 'url', 'image')
 				)
-			),
-			'header' => array(
-				array(
-					'title'	=> 	'Home Top Banner',
-					'note'	=> 	'Home Top Banner Under Top Menu',
-					'type'	=> 	'list',
-					'item'	=> 	array('url', 'image')
-					)
 			),
 			'footer' => array(
 				array(
@@ -148,42 +133,13 @@ function themeSettingsPage() {
 					'type' => 'text'
 				),
 				array(
-					'title' => 'Payment gateway logo',
-					'note' => 'Uploade site payment gateway logos.',
-					'type' => 'upload'	
-				),
-				array(
-					'title' => 'Our Brand (1)',
-					'note' => 'Uploade brand logo & set url.',
-					'type'	=> 	'list',
-					'item'	=>	array('title', 'url', 'image')
-				),
-				array(
-					'title' => 'Our Brand (2)',
-					'note' => 'Uploade brand logo & set url.',
-					'type'	=> 	'list',
-					'item'	=>	array('title', 'url', 'image')
-				),
-				array(
-					'title' => 'Our Brand (3)',
-					'note' => 'Uploade brand logo & set url.',
-					'type'	=> 	'list',
-					'item'	=>	array('title', 'url', 'image')
-				),
-				array(
-					'title' => 'Our Brand (4)',
-					'note' => 'Uploade brand logo & set url.',
-					'type'	=> 	'list',
-					'item'	=>	array('title', 'url', 'image')
-				),
-				array(
 					'title' => 'Tracking Code',
-					'note' => 'Paste your Google analytics (or other) code here.',
-					'type' => 'textarea'
+					'note' => 'Paste your Google analytics (or other) ID here.',
+					'type' => 'text'
 				)
 			)
-		),
-		'styling' => array(
+		),*/
+		/*'styling' => array(
 			'layout' => array(
 				array(
 					'title' => 'Layout Color Style',
@@ -252,11 +208,6 @@ function themeSettingsPage() {
 					'type' => 'radio',
 					'nature' => 'animation',
 					'radio_value' => array('left', 'right')
-				),
-				array(
-					'title'	=>	'Widget Title Background',
-					'note'	=> 	'Choose Widget Title Background Image',
-					'type'	=> 	'upload'
 				)
 			),
 			'template layout' => array(
@@ -291,7 +242,7 @@ function themeSettingsPage() {
 					'checkbox_value' => array('yes', 'no')
 				)
 			)
-		),
+		),*/
 		'Typography' => array(
 			'Body' => array(
 					array(
@@ -353,6 +304,46 @@ function themeSettingsPage() {
 					)
 				)
 		),
+		/*'Social' => array(
+			'Social Icons' => array(
+				array(
+					'title' => 'Social(1)',
+					'note' => 'Use FontAwasome Icon class & set url.',
+					'type'	=> 	'list',
+					'item'	=>	array('title', 'url', 'image')
+				),
+				array(
+					'title' => 'Social(2)',
+					'note' => 'Use FontAwasome Icon class & set url.',
+					'type'	=> 	'list',
+					'item'	=>	array('title', 'url', 'image')
+				),
+				array(
+					'title' => 'Social(3)',
+					'note' => 'Use FontAwasome Icon class & set url.',
+					'type'	=> 	'list',
+					'item'	=>	array('title', 'url', 'image')
+				),
+				array(
+					'title' => 'Social(4)',
+					'note' => 'Use FontAwasome Icon class & set url.',
+					'type'	=> 	'list',
+					'item'	=>	array('title', 'url', 'image')
+				),
+				array(
+					'title' => 'Social(5)',
+					'note' => 'Use FontAwasome Icon class & set url.',
+					'type'	=> 	'list',
+					'item'	=>	array('title', 'url', 'image')
+				),
+				array(
+					'title' => 'Social(6)',
+					'note' => 'Use FontAwasome Icon class & set url.',
+					'type'	=> 	'list',
+					'item'	=>	array('title', 'url', 'image')
+				)
+			)
+		),*/
 		'Custom' => array(
 			'Custom CSS'=> array(
 				array(
@@ -375,11 +366,11 @@ function themeSettingsPage() {
 			<div class="leftManu">
 				<div class="topbar logotop">
 					<div class="icon">
-						<img src="<?= get_template_directory_uri(); ?>/ch_admin_option/img/1462632628_Settings.png" alt="setting icon"/>
+						<img src="<?= $path; ?>/ch_option/img/1462632628_Settings.png" alt="setting icon"/>
 					</div>
 					<div class="Logotitle">
 						<h3><span style="color:red;">Theme</span><span>Options</span></h3>
-						<span class="themeoption_powerBy">Powered by Code House</span>
+						<span class="themeoption_powerBy">Powered by <a target="_blank" href="https://www.facebook.com/LaraSoft-438450959878922/">LaraSoft</a></span>
 					</div>
 				</div>
 				<div class="ThOleftMenuItem">
@@ -487,8 +478,13 @@ function themeSettingsPage() {
 														echo '<input type="hidden" value="'.$ch_data->ch_get_opt($singBody[$i]['title'].'_'.$s_item .'_id').'" name="'.$ch_data->ch_stringReplace($singBody[$i]['title'].'_'.$s_item). '_id' .'"/>';
 														echo '<input type="text" value="'.$ch_data->ch_get_opt($singBody[$i]['title'].'_'.$s_item).'" name="'.$ch_data->ch_stringReplace($singBody[$i]['title'].'_'.$s_item).'"/>';
 														echo '<button class="button button-submit add-image">Add Image</button>';
-														if(!empty($ch_data->ch_get_opt($singBody[$i]['title'].'_'.$s_item))){
-															echo '<div class="imgPreview"><img src="'.$ch_data->ch_get_opt($singBody[$i]['title'].'_'.$s_item).'"/></div>';
+														if($ch_data->ch_get_opt($singBody[$i]['title'].'_'.$s_item)){
+															echo '<div class="imgPreview">';
+															$strLen = strlen( $ch_data->ch_get_opt($singBody[$i]['title'].'_'.$s_item) );
+															if( $strLen > 30){
+															 echo '<img src="'.$ch_data->ch_get_opt($singBody[$i]['title'].'_'.$s_item).'"/>';
+															}
+															echo '</div>';
 														}
 													break;
 
@@ -510,7 +506,7 @@ function themeSettingsPage() {
 									<span><i><?=$singBody[$i]['note'];?></i></span>
 									<div class="img">
 										<?php 	
-										if($singBody[$i]['type'] == 'upload' && !empty($ch_data->ch_get_opt($singBody[$i]['title']) ) ) {
+										if($singBody[$i]['type'] == 'upload' && $ch_data->ch_get_opt($singBody[$i]['title']) ) {
 											echo '<img src="'.$ch_data->ch_get_opt($singBody[$i]['title']).'" alt="'.$singBody[$i]['title'].'">';
 										}
 										?>
